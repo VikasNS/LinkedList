@@ -1,2 +1,136 @@
-# LinkedList
-LinkedList operations
+    #include<stdio.h>
+    #include<stdlib.h>
+    #define null 0
+    struct node
+    {
+        int info;
+        struct node * next;
+    };
+    typedef struct node * nodeptr;
+    
+    nodeptr getNode()
+    {
+        return (nodeptr)malloc(sizeof(nodeptr));
+    }
+    
+    void freeNode(nodeptr node)
+    {
+        free(node);
+    }
+    
+    //We would be given a node p's adress and would be asked to insert new node next to it
+    void InsertAfterAGivenNode(nodeptr p,int value)
+    {
+        if(p==null) printf("Circular Linked List is empty");
+        else 
+        {
+            
+            
+            //We get a new node and assign the value;
+            nodeptr newnode=getNode();
+            newnode->info=value;
+            
+            // We hava a node p
+            // Before we insert a new node,ie initially p->next contains the address of the next node(Q)
+            
+            // We have to insert the newnode between these two nodes;
+            
+            //So we have to link p with newnode and  newnode with Q (its address will be in p->next 
+           
+            //We do this first ie Link newnode with Q
+            //As if we first did linking p with newnode
+            //p->next would be assigned to newnode
+            //but Q's address which was stored in p->next
+            //would be gone which would be needed later to link newnode with Q
+            
+            //Linking newnode with Q
+             newnode->next=p->next;
+            
+            //Linking p with newnode
+            p->next=newnode;
+        
+            
+        }
+    }
+    
+    //We would be given address a nod p
+    //Lets imagine the node next to p is q
+    //and the node next to q is r
+    // .....p->q->r...
+    //Here p is linked to q and q is linked to r
+    //Our job is to delete the node after p
+    //ie the node to be deleted is q
+    //So all we have to do is directly link p to r
+    // p->r
+    // THus we deleted q (The node next to p) as asked in question
+    void DeleteANodeAferAGivenNode(nodeptr p)
+    {
+        //First we check if p or p->next are null(There is no node 
+        //right of p)
+        //In either case Deletetion is not possible 
+        if(p==null || p->next==null) printf("Deletion is not possible");
+        else
+        {
+            //We store node to be deleted q's address which is present
+            //in p->next in a q variable as we need it to free memory 
+            //later
+            nodeptr q=p->next;
+            
+            //Now we link p to r
+            //r's address is present in q-> next
+            
+            //q->next will give us address of r
+            
+            
+            
+            p->next=q->next;
+            //it can also be done as p->next=(p->next)->next
+            
+            
+            printf("%d was deleted \n ",q->info);
+            //Finally we free q node whose address is stored in temp
+            free(q);
+            
+            
+        }
+    }
+    void display(nodeptr clist)
+    {
+        
+        if(clist==null) printf("Circular Linked List is empty");
+        else 
+        {
+            nodeptr p=clist;
+            p=p->next;
+            while(p!=clist)
+            {
+                printf("%d",p->info);
+                
+                p=p->next;
+                if(p!=clist) printf("->");
+            }
+            printf("->%d \n",p->info);
+            
+        }
+    }
+    int main() {
+        nodeptr one=getNode();
+        one->info=40;
+        nodeptr two=getNode();
+        nodeptr three=getNode();
+        three->info=30;
+        
+        two->info=20;
+        one->next=two;
+        
+        
+        two->next=three;
+        three->next=one;
+        display(one);
+       
+        InsertAfterAGivenNode(one,45);
+        display(one);
+       DeleteANodeAferAGivenNode(two);
+       display(one);
+       
+    }
