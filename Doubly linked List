@@ -1,0 +1,190 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define null 0
+struct node 
+{
+    int info;
+    struct node * left;
+    struct node * right;
+};
+
+typedef struct node * nodeptr;
+
+nodeptr getNode()
+{
+    return (nodeptr)malloc(sizeof(nodeptr));
+}
+void display(nodeptr dlist)
+{
+    nodeptr curr=dlist;
+    while(curr!=null)
+    {
+        printf("%d",curr->info);
+        if(curr->right!=null) printf("->");
+        curr=curr->right;
+    }
+    printf("\n");
+    
+}
+
+void insertEnd(nodeptr *dlist,int value)
+{
+    nodeptr newnode=getNode();
+    newnode->info=value;
+    newnode->right=null;
+    if(*dlist==null) *dlist=newnode;
+    else
+    {
+        nodeptr curr = *dlist;
+        while(curr->right!=null) curr=curr->right;
+        curr->right=newnode;
+    }
+}
+
+void insertFront(nodeptr *dlist,int value)
+{
+    nodeptr newnode=getNode();
+    newnode->info=value;
+    if(*dlist==null) newnode->right=null;
+    else newnode->right=*dlist;
+    *dlist=newnode;
+}
+
+void deleteFront(nodeptr *dlist)
+{
+    if(*dlist==null) printf("DLL is empty,sTUPID!");
+    else
+    {
+        nodeptr temp = *dlist;
+        printf("%d was deleted \n",temp->info);
+        *dlist=temp->right;
+        free(temp);
+        
+    }
+}
+void deleteEnd(nodeptr *dlist)
+{
+    if(*dlist==null) printf("DLL is empty,sTUPID");
+    else
+    {
+        nodeptr prev=null;
+        nodeptr curr=*dlist;
+        while(curr->right!=null) 
+        {
+            prev=curr;
+            curr=curr->right;
+        }
+        if(prev==null) *dlist=null;
+        else prev->right=null;
+        printf("%d was deleted \n",curr->info);
+        free(curr);
+        
+        
+    }
+}
+void deleteGivenNode(nodeptr *node)
+{
+    if(*node==null) printf("Node is empty,sTUPID");
+    else
+    {
+        //a-><-b-><-c
+        //a-><-c
+        printf("%d was deleted \n",(*node)->info);
+        nodeptr prev=(*node)->left;
+        nodeptr next=(*node)->right;
+        if(prev==null) *node=next;
+        if(prev!=null) prev->right=next;
+        if(next!=null) next->left=prev;
+    }
+}
+
+void insertToRigt(nodeptr node,int ele)
+{
+    nodeptr newnode = getNode();
+    newnode->info=ele;
+    if(node==null) printf("Node is empty,sTUPID");
+    else
+    {
+        nodeptr next=node->right;
+        newnode->left=node;
+        newnode->right=next;
+        if(next != null) next->left=newnode;
+        node->right=newnode;
+    }
+}
+
+void insertToLeft(nodeptr node,int ele)
+{
+    
+    if(node==null) printf("Node is empty,sTUPID");
+    else
+    {
+        nodeptr newnode = getNode();
+        newnode->info=ele;
+        
+        nodeptr prev=node->left;
+        newnode->left=prev;
+        newnode->right=node;
+        
+        node->left=newnode;
+        if(prev!=null) prev->right=newnode;
+    }
+}
+
+void delNodeOfVal(nodeptr *dlist,int ele)
+{
+    if(*dlist==null) printf("Node is empty,sTUPID");
+    else
+    {
+        
+        nodeptr curr=*dlist;
+        while(curr!=null && curr->info!=ele)
+        {
+            curr=curr->right;
+            
+        }if(curr==null) printf("Element not found");
+        else
+        {
+            printf("curr->lefft %d \n",curr->left);
+            if(curr->left == null) 
+            {
+                printf("Inside eles 1" );
+                *dlist=curr->right;
+                (*dlist)->left=null;
+                
+            }
+            else
+            {
+                printf("Inside eles 2" );
+                nodeptr prev=curr->left;
+                nodeptr next=curr->right;
+                
+                prev->right=next;
+                if(next!=null) next->left=prev;
+                
+            }
+            free(curr);
+            
+        }
+        
+    }
+}
+
+
+void main()
+{
+    nodeptr start=null;
+    start->left=null;
+    start->right=null;
+    start->info=10;
+    insertToRigt(start,100);
+    insertToRigt(start,100);
+    insertToRigt(start,1000);
+    
+    display(start);
+    delNodeOfVal(&start,100);
+    display(start);
+    
+    
+    
+}
