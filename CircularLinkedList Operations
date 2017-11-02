@@ -1,3 +1,8 @@
+    //Circular Linked List operation Teacher Like Edition :p
+    
+    
+    
+    
     #include<stdio.h>
     #include<stdlib.h>
     #define null 0
@@ -94,6 +99,127 @@
             
         }
     }
+    
+    //We would be given *clist and asked to insert
+    //a new node at the front
+    // Imagine as shown below
+    //   a->b->c
+    
+    // a is the first node
+    // c is the last node
+    // As this is a circular Linked list
+    // The last node has a special property
+    // ie: last node (c) has the address of the first node a
+    
+    // so c->next contains a's adress
+    // ie c is linked to a
+    // Thus the frontmost's address will be stored 
+    // in the last node's next
+    
+    //Thus if we want to add a new node m to front
+     
+    // m->a->b->c
+    
+    // we also need to change c->next to m
+    // which was previously pointing to a
+    // so as to reatian circular lists property
+    // that last node contians first nodes address
+    
+    //finally we need to link m with a to complete the process
+    
+    //First we get First node(a)'s address and store it in variable 1st_node as we need it 
+    //later to link  m (newnode) to a
+    //Then We link c with m by c->next=m(ie newnode)
+    //then m->next=1st_node    
+    
+    
+    void insertFront(nodeptr *clist,int value)
+    {
+        nodeptr node=getNode();
+        node->info=value;
+        if(*clist==null) *clist=node;
+        else
+        {
+            node->next=(*clist)->next;
+        }
+       (*clist)->next=node;
+        
+    }
+    
+    void deleteFront(nodeptr *clist)
+    {   
+        if(*clist==null) printf("LL is empty");
+        else
+        {
+             nodeptr toFree=(*clist)->next;
+             if((*clist)->next==*clist) toFree=*clist;
+             else (*clist)->next=toFree->next;
+             free(toFree);
+        }
+    }
+    
+    void insertEnd(nodeptr * clist,int value)
+    {
+        nodeptr node=getNode();
+        node->info=value;
+        
+        
+        if(*clist==null)
+        {
+            
+            (node)->next=node;
+        
+        }
+        else 
+        {
+             node->next=(*clist)->next;
+            (*clist)->next=node;
+            
+        }
+        *clist=node;
+        
+        
+    }
+    
+    void deleteEnd(nodeptr *clist)
+    {
+        
+        if(*clist==null) printf("LL is empty");
+        else 
+        {
+            nodeptr toFree=*clist;
+            printf("%d was deleted",(*clist)->info);
+            if((*clist)->next==*clist) *clist=null;
+            else
+            {
+                
+                nodeptr p=(*clist)->next; //First node
+                while(p->next!=(*clist)) p=p->next;
+                p->next=(*clist)->next;
+                *clist=p;
+                
+            }
+            free(toFree);
+            
+            
+        }
+    }
+    
+    void concat(nodeptr *clist1,nodeptr *clist2)
+    {
+        
+        
+        if(*clist2==null) *clist2=*clist1;
+        else if(*clist1==null) return (0);
+        else
+        {
+            nodeptr _1st_1st_node=(*clist1)->next;
+            (*clist1)->next=(*clist2)->next;
+            (*clist2)->next=_1st_1st_node;
+            
+        }
+        
+    }
     void display(nodeptr clist)
     {
         
@@ -114,23 +240,23 @@
         }
     }
     int main() {
-        nodeptr one=getNode();
-        one->info=40;
-        nodeptr two=getNode();
-        nodeptr three=getNode();
-        three->info=30;
-        
-        two->info=20;
-        one->next=two;
-        
-        
-        two->next=three;
-        three->next=one;
+        nodeptr one=null;
+        insertFront(&one,10);
+        insertFront(&one,20);
+        insertFront(&one,30);
         display(one);
+        
+        
+        nodeptr one_=null;
+        insertFront(&one_,40);
+        insertFront(&one_,50);
+        insertFront(&one_,60);
+        display(one_);
+        
+        
+        concat(&one,&one_);
+        display(one_);
        
-        InsertAfterAGivenNode(one,45);
-        display(one);
-       DeleteANodeAferAGivenNode(two);
-       display(one);
+        
        
     }
