@@ -39,6 +39,29 @@ void insert_front(Nodeptr *list,int info)
   *list=newnode;
 }
 
+void delete_nth(Nodeptr *list,int n)
+{
+  if(*list!=null)
+  {
+    Nodeptr curr=*list;
+    Nodeptr prev=null;
+    int i=1;
+    while(curr!=null)
+    {
+      if(i==n)
+      {
+        if(prev==null) *list=curr->next;
+        else  prev->next=curr->next;
+        free(curr);
+        break;
+      }
+      prev=curr;
+      curr=curr->next;
+      i++;
+    }
+  }
+}
+
 void insert_nth(Nodeptr *list,int info,int n)
 {
   int i=1;
@@ -89,6 +112,6 @@ int main(void) {
   // n2->next=null;
   display(n);
   printf("\n");
-  insert_nth(&n,400,10);
+  delete_nth(&n,11);
   display(n);
 }
