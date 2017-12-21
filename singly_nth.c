@@ -68,7 +68,7 @@ void insert_nth(Nodeptr *list,int info,int n)
   Nodeptr newnode=getNode();
   newnode->info=info;
   newnode->next=null;
-  if(*list==null) *list=newnode;
+  if(*list==null && n==1) *list=newnode;
   else
      {
       Nodeptr curr=*list;
