@@ -1,1 +1,110 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define null 0
+struct node 
+{
+  int info;
+  struct node * next;
+};
+typedef struct node * Nodeptr;
 
+Nodeptr getNode()
+{
+  return (Nodeptr)malloc(sizeof(Nodeptr));
+}
+
+void display(Nodeptr clist)
+{
+  if(clist==null) printf("Empty list");
+  else
+  {
+    
+    int last=(clist)->info;
+    Nodeptr curr=(clist)->next;
+    while(curr!=clist)
+    {
+      printf("%d->",curr->info);
+      curr=curr->next;
+    }
+    printf("%d",last);
+    
+    
+  }
+}
+
+void insert_front(Nodeptr *clist,int info)
+{
+  Nodeptr newnode=getNode();
+  newnode->info=info;
+  if(clist==null) 
+  {
+    *clist=newnode;
+    
+  }
+  else
+  {
+    newnode->next=(*clist)->next;
+  }
+  (*clist)->next=newnode;
+  
+  
+}
+
+void delete_nth(Nodeptr *clist,int n)
+{
+  
+}
+
+void insert_nth(Nodeptr *clist,int info,int n)
+{
+  Nodeptr newnode=getNode();
+  newnode->info=info;
+  if(*clist!=null)
+  {
+    Nodeptr prev=*clist;
+    Nodeptr curr=(*clist)->next;
+    int i=1;
+    int notdone=1
+    do {
+      if(i==n)
+      {
+        prev->next=newnode;
+        newnode->next=curr;
+        notdone=0;
+        break;
+       }
+      prev=curr;
+      curr=curr->next;
+      
+    }while(curr!=*clist);
+   if(i==n && notdone)
+   {
+     newnode->next=(*clist)->next;
+     (*clist)->next=newnode;
+   }
+  }else
+  {
+    newnode->next=*clist;
+    *clist=newnode;
+  }
+}
+
+int main(void) {
+  Nodeptr n=getNode();
+  n->info=30;
+  n->next=n;
+  for(int i=9;i>0;i--)
+  {
+    insert_front(&n,i*3);
+    
+  }
+  // 
+  // Nodeptr n2=getNode();
+  // n2->info=12;
+  // n->next=n2;
+  // n2->next=null;
+  display(n);
+  insert_nth(&n,40,2);
+  display(n);
+  
+}
