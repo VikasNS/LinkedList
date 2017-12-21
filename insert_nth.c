@@ -46,24 +46,31 @@ void insert_nth(Nodeptr *list,int info,int n)
   newnode->info=info;
   Nodeptr curr=*list;
   Nodeptr prev=null;
+  int done=1;
   while(curr!=null)
   {
+      
       if(i==n)
       {
         if(prev==null) *list=newnode;
         else prev->next=newnode;
         newnode->next=curr;
+        done=0;
         break;
+        
       }
       prev=curr;
       curr=curr->next;
   i++;  
   }
   
-  if(i==n)
+  if(done)
   {
-   newnode->next=null;
-   prev->next=newnode;
+    if(i==n)
+      {
+       newnode->next=null;
+       prev->next=newnode;
+      }
   }
 }
 
@@ -82,6 +89,6 @@ int main(void) {
   // n2->next=null;
   display(n);
   printf("\n");
-  insert_nth(&n,400,11);
+  insert_nth(&n,400,10);
   display(n);
 }
