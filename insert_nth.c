@@ -67,32 +67,37 @@ void insert_nth(Nodeptr *list,int info,int n)
   int i=1;
   Nodeptr newnode=getNode();
   newnode->info=info;
-  Nodeptr curr=*list;
-  Nodeptr prev=null;
-  int done=1;
-  while(curr!=null)
-  {
-      
-      if(i==n)
+  newnode->next=null;
+  if(*list==null) *list=newnode;
+  else
+     {
+      Nodeptr curr=*list;
+      Nodeptr prev=null;
+      int done=1;
+      while(curr!=null)
       {
-        if(prev==null) *list=newnode;
-        else prev->next=newnode;
-        newnode->next=curr;
-        done=0;
-        break;
-        
+          
+          if(i==n)
+          {
+            if(prev==null) *list=newnode;
+            else prev->next=newnode;
+            newnode->next=curr;
+            done=0;
+            break;
+            
+          }
+          prev=curr;
+          curr=curr->next;
+      i++;  
       }
-      prev=curr;
-      curr=curr->next;
-  i++;  
-  }
-  
-  if(done)
-  {
-    if(i==n)
+      
+      if(done)
       {
-       newnode->next=null;
-       prev->next=newnode;
+        if(i==n)
+          {
+           newnode->next=null;
+           prev->next=newnode;
+          }
       }
   }
 }
@@ -110,8 +115,12 @@ int main(void) {
   // n2->info=12;
   // n->next=n2;
   // n2->next=null;
-  display(n);
+  Nodeptr n3=null;
+  display(n3);
   printf("\n");
-  delete_nth(&n,11);
-  display(n);
+  insert_nth(&n3,1,1);
+  insert_nth(&n3,2,2);
+  insert_nth(&n3,3,3);
+  insert_nth(&n3,5,2);
+  display(n3);
 }
