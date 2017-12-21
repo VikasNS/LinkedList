@@ -71,7 +71,11 @@ void insert_nth(Nodeptr *dlist,int info,int n)
   int i=1;
   Nodeptr newnode=getNode();
   newnode->info=info;
-  Nodeptr curr=*dlist;
+  newnode->right=null;
+  newnode->left=null;
+  if(*dlist==null && n==1) *dlist=newnode;
+  else
+  {Nodeptr curr=*dlist;
   Nodeptr prev=null;
   int done=1;
   while(curr!=null)
@@ -102,17 +106,13 @@ void insert_nth(Nodeptr *dlist,int info,int n)
        prev->right=newnode;
        newnode->left=prev;
       }
-  }
+  }}
 }
 
 int main(void) {
-  Nodeptr n=getNode();
-  n->info=30;
-  for(int i=9;i>0;i--)
-  {
-    insert_front(&n,i*3);
-    
-  }
+  Nodeptr n=null;
+  
+  
   // 
   // Nodeptr n2=getNode();
   // n2->info=12;
@@ -120,7 +120,11 @@ int main(void) {
   // n2->next=null;
   display(n);
   printf("\n");
-  insert_nth(&n,2,3);
+  insert_nth(&n,3,1);
+  insert_nth(&n,3,2);
+  insert_nth(&n,3,3);
+  insert_nth(&n,0,2);
+  insert_nth(&n,0,5);
   display(n);
   
 }
