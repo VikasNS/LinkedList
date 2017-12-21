@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define null 0
+struct node 
+{
+  int info;
+  struct node * left;
+  struct node * right;
+  
+};
+typedef struct node * Nodeptr;
+
+Nodeptr getNode()
+{
+  return (Nodeptr)malloc(sizeof(Nodeptr));
+}
+
+void display(Nodeptr dlist)
+{
+  if(dlist==null) printf("Empty list");
+  else
+  {
+    Nodeptr curr=dlist;
+    while(curr!=null) 
+    {
+      printf("%d",curr->info);
+      if(curr->right!=null) printf("->");
+      curr=curr->right;
+    }
+    
+  }
+}
+
+void insert_front(Nodeptr *dlist,int info)
+{
+  
+  Nodeptr newnode=getNode();
+  newnode->info=info;
+  newnode->left=null;
+  newnode->right=*dlist;
+  if(*dlist!=null) (*dlist)->left=newnode;
+  *dlist=newnode;
+}
+
+void delete_nth(Nodeptr *dlist,int n)
+{
+  if(*dlist!=null)
+  {
+    Nodeptr curr=*dlist;
+    Nodeptr prev=null;
+    int i=1;
+    while(curr!=null)
+    {
+      if(i==n)
+      {
+        if(prev==null) *dlist=curr->right;
+        else  prev->right=curr->right;
+        if(curr->right!=null) (curr->right)->left=prev;
+        free(curr);
+        break;
+      }
+      prev=curr;
+      curr=curr->right;
+      i++;
+    }
+  }
+}
+
+void insert_nth(Nodeptr *dlist,int info,int n)
+{
+  int i=1;
+  Nodeptr newnode=getNode();
+  newnode->info=info;
+  Nodeptr curr=*dlist;
+  Nodeptr prev=null;
+  int done=1;
+  while(curr!=null)
+  {
+      
+      if(i==n)
+      {
+        
+        newnode->right=curr;
+        newnode->left=prev;
+        curr->left=newnode;
+        if(prev==null) *dlist=newnode;
+        else prev->right=newnode;
+        done=0;
+        break;
+        
+      }
+      prev=curr;
+      curr=curr->right;
+  i++;  
+  }
+  
+  if(done)
+  {
+    if(i==n)
+      {
+       newnode->right=null;
+       prev->right=newnode;
+       newnode->left=prev;
+      }
+  }
+}
+
+int main(void) {
+  Nodeptr n=getNode();
+  n->info=30;
+  for(int i=9;i>0;i--)
+  {
+    insert_front(&n,i*3);
+    
+  }
+  // 
+  // Nodeptr n2=getNode();
+  // n2->info=12;
+  // n->next=n2;
+  // n2->next=null;
+  display(n);
+  printf("\n");
+  insert_nth(&n,2,3);
+  display(n);
+  
+}
