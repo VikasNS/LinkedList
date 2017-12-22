@@ -30,6 +30,7 @@ void display(Nodeptr clist)
     
     
   }
+  
 }
 
 void insert_front(Nodeptr *clist,int info)
@@ -52,11 +53,32 @@ void insert_front(Nodeptr *clist,int info)
 
 void delete_nth(Nodeptr *clist,int n)
 {
-  
+  if(*clist==null) printf("List is empty");
+  else if((*clist)->next==(*clist)) *clist=null;
+  else
+  {
+      Nodeptr curr=(*clist)->next;
+      Nodeptr prev=(*clist);
+      int i=1;
+      do{
+         if(i==n)
+         {
+             prev->next=curr->next;
+             if(curr==*clist)
+             {
+                 *clist=prev;
+             }
+         }
+         prev=curr;
+         curr=curr->next;
+         i++;
+      }while(curr!=*clist);
+  }
 }
 
 void insert_nth(Nodeptr *clist,int info,int n)
 {
+  
   Nodeptr newnode=getNode();
   newnode->info=info;
   if(*clist!=null)
@@ -64,7 +86,7 @@ void insert_nth(Nodeptr *clist,int info,int n)
     Nodeptr prev=*clist;
     Nodeptr curr=(*clist)->next;
     int i=1;
-    int notdone=1
+    int notdone=1;
     do {
       if(i==n)
       {
@@ -75,36 +97,41 @@ void insert_nth(Nodeptr *clist,int info,int n)
        }
       prev=curr;
       curr=curr->next;
-      
+      i++;
     }while(curr!=*clist);
    if(i==n && notdone)
    {
      newnode->next=(*clist)->next;
      (*clist)->next=newnode;
+     *clist=newnode;
    }
   }else
   {
-    newnode->next=*clist;
+    
     *clist=newnode;
+    (*clist)->next=*clist;
   }
 }
 
 int main(void) {
-  Nodeptr n=getNode();
-  n->info=30;
-  n->next=n;
-  for(int i=9;i>0;i--)
-  {
-    insert_front(&n,i*3);
-    
-  }
+  Nodeptr n=null;
+  
   // 
   // Nodeptr n2=getNode();
   // n2->info=12;
   // n->next=n2;
   // n2->next=null;
   display(n);
-  insert_nth(&n,40,2);
+  printf("\n");
+  
+  insert_nth(&n,40,1);
+  insert_nth(&n,30,2);
+  insert_nth(&n,450,2);
+  display(n);
+  printf("\n");
+  delete_nth(&n,2);
+  delete_nth(&n,1);
+  delete_nth(&n,3);
   display(n);
   
 }
