@@ -1,0 +1,103 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<math.h>
+
+#define max_size 50
+
+typedef struct stack
+{
+    char items[max_size];
+    int top;
+    
+}STACK;
+
+void push(STACK * s,int ele)
+{
+    //printf("I'm pushing %c \n",ele);
+    if(s->top == (max_size)) printf("Stack is Full");
+    else s->items[++(s->top)]=ele;
+}
+
+float pop(STACK * s)
+{
+     //printf("I'm poping %c \n",s->items[(s->top)]);
+     return s->items[(s->top)--];
+    
+}
+
+ int priority(char opr)
+   {
+       switch(opr)
+       {
+           case '^':
+           //printf("prio is %d \n",5);
+           return (5);
+           case '/':
+           case '*':
+           //printf("prio is %d \n",4);
+           return (4);
+           case '+':
+           case '-':
+           //printf("prio is %d \n",3);
+           return (3);
+           case '(':return (0);
+       }
+   }
+   int comparator(int newone,int insidestack)
+   {
+       if(newone=='^') return 0;
+       //printf("newone %d insidestack %d \n",newone,insidestack);
+       return (insidestack >= newone);
+   }
+
+
+int main() {
+   STACK s;
+   s.top=-1;
+   char input[20];
+   char output[20];
+   int i=0;
+   int o=0;
+   printf("Enter the infix expression to be converted \n");
+   scanf("%s",input);
+   printf("%s \n",input);
+   
+  
+   
+   while(input[i]!='\0')
+   {   if(input[i]=='^') push(&s,input[i]);
+       else if(isalpha(input[i]))
+       {
+           //printf("Outputing %c \n",input[i]);
+           output[o++]=input[i];
+           
+       }
+       
+       else if(input[i]=='(') push(&s,input[i]);
+       else if(input[i]==')') 
+       {
+           char op;
+           while((op=pop(&s))!='(') 
+           if(s.top==-1) 
+           {printf("Invalid Expression Silly");
+               break;
+           }
+           else output[o++]=op;
+       }
+       else
+       {
+           while((comparator(priority(input[i]),priority(s.items[s.top]))) && (s.top!=-1)) 
+           {
+               char p=pop(&s);
+               output[o++]=p;
+               //printf("Outputing %c \n",p);
+               
+           }
+           push(&s,input[i]);
+       }
+       i++;
+   }
+   while(s.top!=-1) output[o++]=pop(&s);
+   output[o]='\0';
+   printf("%s \n",output);
+}

@@ -1,0 +1,65 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<math.h>
+
+#define max_size 50
+
+typedef struct stack
+{
+    float items[max_size];
+    int top;
+    
+}STACK;
+
+void push(STACK * s,int ele)
+{
+    if(s->top == (max_size)) printf("Stack is Full");
+    else s->items[++(s->top)]=ele;
+}
+
+float pop(STACK * s)
+{
+    
+     return s->items[(s->top)--];
+    
+}
+
+float operate(float op1,float op2,char operat,int *devbyzeroerror)
+{
+    switch(operat)
+    {
+        case '+': return op1+op2;
+        case '-': return op1-op2;
+        case '*': return op1*op2;
+        case '/': if(op2==0) *devbyzeroerror=1;
+                  else return op1/op2;
+        case '^': return pow(op1,op2);
+    }
+}
+
+
+int main() {
+   STACK s1;
+   s1.top=-1;
+   char input[10];
+   int byzeroerror=0;
+   printf("Enter the postfix expression to be evaluated \n");
+   scanf("%s",input);
+   for(int i=0;input[i]!='\0';i++)
+   {
+       if(isdigit(input[i])) push(&s1,input[i]-'0');
+       else {
+           if(s1.top>=1)
+           {
+               float op2=pop(&s1);
+               float op1=pop(&s1);
+               push(&s1,operate(op1,op2,input[i],&byzeroerror));
+               if(byzeroerror) break;
+           }else printf("Invalid Expression");
+       }
+   }
+   if(s1.top!=0 || byzeroerror) printf("Invalid Expression,Silly!");
+   else printf("Answer is %.2f",pop(&s1));
+   
+  
+}

@@ -1,0 +1,474 @@
+//Please Dont use this to copy in test.
+//Even if you do,atleast change the variable names.
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+#define null 0
+struct node
+{
+    int info;
+    struct node * next;
+};
+
+typedef struct node * nodeptr;
+
+nodeptr getNode()
+{
+    //we are getting a memory space of size nodeptr and type casting it to nodeptr
+    return (nodeptr)malloc(sizeof(nodeptr));
+}
+void insertFront(nodeptr *start,int value)
+{
+    nodeptr newnode=getNode();
+    newnode->info=value;
+    //Case 1: If there are no elements
+    //We point the next of the newnode to null
+    if(*start==null) newnode->next=null;
+    //Case 2: If there are elements
+    //We point the next of the newnode to start
+    else newnode->next=*start;
+    //In both the cases we change the start to the new node
+    *start=newnode;
+}
+
+void insertEnd(nodeptr *start,int value)
+{
+    nodeptr newnode=getNode();
+    newnode->info=value;
+    newnode->next=null;
+    //Case 1: If there are no elements
+    //We add the element to the Begining by assigning  start to newnode
+    if(*start==null) *start=newnode;
+    //Case 2: If there are elements
+    //We traverse till be find the last element and point the next of the last element to newnode
+    else
+    {
+        nodeptr p=*start;
+        while(p->next!=null) p=p->next;
+        p->next=newnode;
+    }
+}
+
+void deleteEnd(nodeptr *start)
+{
+    //Case 1: If the Linked List is empty
+    if(*start==null) printf("Method:DeleteEnd : Linked List is empty");
+    //Case 2: If the Linked List contains atleast one Element
+    else
+    {
+        nodeptr prev=null;
+        nodeptr curr=*start;
+        //We traverse till curr points to the last element
+        while(curr->next!=null)
+        {
+          prev=curr;
+          curr=curr->next;
+        }
+        //Sub Case 1: If the element to be deleted is 1st element
+        //ie:If the Linked List contains only one element
+        //Prev wont be changed as we dont enter the while loop
+        //We point the start to null and free the memory occupied by start
+        if(prev==null) 
+        {
+            nodeptr temp=*start;
+            *start=null;
+            free(temp);
+            
+        }
+        //Sub Case 2: If the element to be deleted is not the first element
+        //ie:If there are more than one element in Linked List
+        //prev points to the previos element to last element
+        //we assign next of prev to null and free end element which is pointed by curr
+        else
+        {
+            prev->next=null;
+            free(curr); 
+        }
+     }
+    
+}
+
+void deleteFront(nodeptr *start)
+{   //Case 1: If the Linked List is empty
+    if(*start==null) printf("Linked List is empty");
+    //Case 2: If Linked list contains Elements
+    //We point the start to next element and free the previous start
+    else
+    {
+        nodeptr temp=*start;
+        *start=temp->next;
+        free(temp);
+    }
+}
+
+void deleteNthNode(nodeptr *start,int position)
+{
+    //Case 1: If the Linked List contains no element
+    if(*start==null) printf("Linked List is empty");
+    //Case 2:If atleast one element is present in the LL
+    else
+    {
+        
+        nodeptr prev=null;
+        nodeptr curr=*start;
+        int i=1;
+        //We traverse the List
+        //Until we reach the last node or we find the position that we wanted
+        while(curr->next!=null && i!=position )
+        {
+            i++;
+            prev=curr;
+            curr=curr->next;
+            printf("%d \n",i);
+        }
+        //Sub case 1:If prev didnt change(remained null),which means either curr->next was null (implying that there is only one element)
+                    //or the position that we are supposed to delete is the 1st position
+        if(prev==null)
+        {
+            
+            
+            //If position is 1,ie we are supposed to delete the 1st element,which means 2 things
+            //1st we didnt enter while loop as we were supposed to delete the 1st element
+            //Or we didnt enter while loop as both the condition were false ie we were supposed to delete the first element and there is only one element
+            //In either case we have to delete the first element
+            //Thus we change start to start of next and free the start
+            
+            if(position == 1)
+            {
+            nodeptr temp=*start;
+            *start=temp->next;
+            free(temp);
+            }
+            
+            //As the position that we want to delete is not 1 which implies prev remained null because there was only one element not because positoin was 1
+            //Thus we have one element and we are asked to delete an element whose position is greater than one.so we output an error
+            else
+            {
+                printf("The requested postion coudnot be found");
+            }
+        }
+        //Now we are sure that we are not deleting the fist element
+        else
+        {
+            //After traversing if we coudnt find the element
+            //ex:We are asked to delete the element at 5th while the LL contains only 4 nodes
+            //While loop will traverse till the last node and i will reach the length of the node ie i=4
+            //so we compare i and position if every thing went right i should have been equal to position 
+            //but if not,implies that we are asked to delete the node that doesnt exist so we show an error message
+            if(i!=position) printf("The Requested position coudnot be found");
+            //Now we know everything is fine
+            //so all we do is point the next of prev to next of curr and free curr
+            else
+            {
+            prev->next=curr->next;
+            free(curr);
+            }
+        }
+        
+    }
+}
+void insertNthNode(nodeptr *start,int value,int position)
+{
+    nodeptr newnode=getNode();
+    newnode->info=value;
+    //Case 1: If Linked List is empty,Add the element and point start to that element
+    if(*start==null) 
+    {
+        if(position != 1) printf("Position out of bound,We have inserted the element at the begining");
+        *start=newnode;
+        newnode->next=null;
+    }
+    
+    else
+    {
+        
+        int i=1;
+        nodeptr prev=null;
+        nodeptr curr=*start;
+    //Iterate till we reach current of next is null or we reach the position requested 
+        while(curr->next!=null && i < position ) 
+        {   
+            prev=curr;
+            curr=curr->next;
+            i++;
+            
+        }
+    //Case 2:If the requested position coudnot be found(reached) 
+    //which means Requested position is out of the Linked List
+    //We insert the element at the end
+        if(i<position)
+        {
+            printf("Position out of bound,We have inserted the element at the end \n");
+            newnode->next=null;
+            curr->next=newnode;
+            
+        }
+   //Case 3:If the requested postion is the first positon
+   //We point the start to the new node and next of new node to the previous start
+        else if(position==1) 
+        {
+            printf("inside 1 \n");
+            newnode->next=*start;
+            *start=newnode;
+        }
+    
+    //Case 4:We are sure that we have element to left and right
+    
+        else
+        {
+            printf("inside 3 \n");
+            prev->next=newnode;
+            newnode->next=curr;
+        }
+    }
+}
+
+
+
+void display(nodeptr start)
+{
+    if(start==null) printf("Method:Display :Linked List is Empty \n");
+    nodeptr p=start;
+    while(p!=null) 
+    {
+        printf("%d",p->info);
+        if(p->next!=null) printf("->");
+        else printf("\n");
+        p=p->next;
+    }
+}
+void countNoOfNodes(nodeptr start)
+{
+   nodeptr p=start;
+    int i=0;
+    while(p!=null)
+    {
+        p=p->next;
+        i++;
+    }
+    printf("There are %d nodes \n",i);
+}
+
+void sum(nodeptr start)
+{
+    int sum=0;
+    nodeptr p=start;
+    while(p!=null)
+    {
+        sum=sum+p->info;
+        p=p->next;
+    }
+    printf("Sum is %d \n",sum);
+}
+
+void search(nodeptr start,int ele)
+{
+    nodeptr p=start;
+    int notFound=1;
+    while(p!=null)
+    {
+        if(p->info == ele) 
+        {
+            printf("Found");
+            notFound=0;
+        }
+        p=p->next;
+        
+    }
+    if(notFound)
+    {
+        printf("Element was not found");
+    }
+}
+void insertToRightOf(nodeptr *start,int value,int ele)
+{
+    nodeptr newnode=getNode();
+    newnode->info=value;
+    if(*start==null)
+    {
+        *start=newnode;
+        newnode->next=null;
+        
+    }
+    nodeptr curr=*start;
+    
+    while(curr!=null && curr->info != ele)
+    {
+        curr=curr->next;
+    }
+    if(curr!=null)
+    {
+        newnode->next=curr->next;
+        curr->next=newnode;
+        
+    }
+}
+
+void deleteToRightOf(nodeptr start,int toRight)
+{
+    if(start == null ) printf("Linked List is Empty");
+    else
+    {
+        nodeptr curr = start;
+        while(curr->next!=null && curr->info!=toRight) curr=curr->next;
+        
+        if(curr->next==null) printf("There is no element to right of %d \n",toRight);
+        else
+        {
+            nodeptr temp=curr->next;
+            curr->next=temp->next;
+            free(temp);
+        }
+    }
+}
+
+void deleteNodeContainingValue(nodeptr *start,int value)
+{
+    if(*start==null) printf("Linked List is Empty");
+    else
+    {
+        nodeptr prev=null;
+        nodeptr curr=*start;
+        while(curr->next !=null && curr->info != value)
+        {
+            prev=curr;
+            curr=curr->next;
+        }
+        if(curr->info == value)
+        {
+            if(prev==null) *start=curr->next;
+            else  prev->next=curr->next;
+            free(curr);
+        }else printf("The requested element couldnot be found \n");
+        
+    }
+}
+
+void concatinateTwoLinkedLists(nodeptr *start1 ,nodeptr *start2)
+{
+    if(*start2 == null) exit(0);
+    else if(*start1 == null) *start1=*start2;
+    else
+    {
+        nodeptr curr=*start1;
+        while(curr->next != null) curr=curr->next;
+        curr->next=*start2;
+    }
+}
+
+void freeAllTheNode(nodeptr *start)
+{
+    if(*start == null) printf("Linked List is empty");
+    else
+    {
+        nodeptr prev=null;
+        nodeptr curr=*start;
+        while(curr!=null)
+        {
+            prev=curr;
+            curr=curr->next;
+            free(prev);
+        }
+        
+    }
+    
+}
+nodeptr makeSecondCopy(nodeptr start1)
+{
+    if(start1==null) return null;
+    else
+    {
+        nodeptr start2=getNode();
+        start2->next=null;
+        nodeptr curr=start1;
+        start2->info=curr->info;
+        curr=curr->next;
+        nodeptr curr_start2=start2;
+       
+        while(curr!=null)
+        {
+            nodeptr newnode=getNode();
+            newnode->info=curr->info;
+            printf("curr %d newnode %d \n",curr->info,newnode->info);
+            curr=curr->next;
+            curr_start2->next=newnode;
+            curr_start2=curr_start2->next;
+            
+        }
+        curr_start2->next=null;
+        return start2;
+    }
+}
+//works
+void reverseList(nodeptr *start)
+{
+    //Case 1: If there are no elements in the LL
+    if(*start == null) printf("Method: reverseList :Linked List contains no elements");
+    //Case 2:If there exists atleast one element in the list
+    else
+    {
+        //We initialze prev to null and curr to start;
+        //We have a temp variable which stores next of curr.
+        
+        nodeptr prev=null;
+        nodeptr curr=*start;
+        nodeptr temp;
+        
+        //If we had used curr->next !=null we wouldnt have got the chance to link the last element
+        //As the linking takes place inside the loop 
+        //We need to goo till curr becomes null
+        //so that we could get our hands on curr->next inside the loop and link it to prev
+        
+        //currently prev -> next poits to curr
+        //we are supposed to reverse the list //ie make curr->next point to prev
+        
+        //we will traverse the LL until curr becomes null
+        while(curr!=null)
+        {  
+            //We store curr->next in temp as we will need it to move to the next element ,
+            //we will do that at the last step by curr=temp
+            temp = curr->next;
+            //we change the linkage to reverse the list
+            curr->next=prev;
+            
+            //We reassign the prev and curr so as to move to the next node
+            prev=curr;
+            curr=temp;
+        }
+        //After reverse linkage is completed
+        //We must think of edge cases
+        //The first element in the original LL will be last element in the LL
+        //So as we know last elements next should to null
+        //We need not have to do this explicitly as when we enter the while loop first
+        //time we prev will be null 
+        //curr here during the first entry to the LL will be the last element in the reversed LL
+        //When curr->next is pointed to prev
+        //last nodes next becomes null
+        
+        //The other edge condition is start should point to the first node
+        //But this must be manually handled by us
+        //In the last iteration of the while loop
+        //curr becomes null meanwhile prev will be pointing to the last node of the existing list which is also the 
+        //first node of the reversed list
+        
+        //So we assign start to prev.
+        
+        //when i refer start , i mean *start
+        
+        *start=prev;
+    }
+}
+
+
+
+
+int main() {
+   nodeptr start1=null;
+   nodeptr start2=null;
+   
+ 
+   
+   
+}
